@@ -1,5 +1,7 @@
 const textElement = document.getElementById('text'),
-  optionButtonsElement = document.getElementById('option-buttons');
+  optionButtonsElement = document.getElementById('option-buttons'),
+  stats = document.querySelector('.stats'),
+  modal = document.querySelector('.modal');
 
 // стан (відстежуємо, які предмети є в наявності у гравця)
 let state = {};
@@ -29,6 +31,11 @@ function showTextNode(textNodeIndex) {
       button.classList.add('btn');
       button.addEventListener('click', () => selectOption(option));
       optionButtonsElement.appendChild(button);
+    }
+    if (option.nextText === -1) {
+      stats.style.display = 'flex';
+    } else {
+      stats.style.display = 'none';
     }
   })
 }
@@ -387,4 +394,50 @@ const textNodes = [
   }
 ]
 
-startGame()
+// Модальне вікно
+// показати предмети в статистиці
+const showItems = () => {
+  const items = Object.values(state.items);
+  items.forEach(value => {
+    const element = document.createElement('li');
+    element.innerHTML =
+      `${value}`
+      ;
+    document.querySelector('.items').append(element);
+  });
+}
+
+// функція додавання результату в статистику
+const showDeath = () => {
+  const element = document.createElement('p');
+  element.innerHTML = state.death;
+  document.querySelector('.death').append(element);
+}
+
+// функція створення модального вікна зі статистикою
+function createPopup() {
+  showItems();
+  showDeath();
+}
+
+stats.addEventListener('click', () => {
+  createPopup();
+  modal.style.display = 'flex';
+  modal.classList.remove('hide');
+  document.body.style.overflow = 'hidden';
+});
+
+// функція закриття модального вікна
+const closeModal = () => {
+  modal.classList.add('hide');
+  modal.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+modal.addEventListener('click', (e) => {
+  if (e.target === modal || e.target.getAttribute('data-close') == '') {
+    closeModal();
+  }
+});
+
+startGame();
