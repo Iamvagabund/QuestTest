@@ -465,7 +465,7 @@ function createPopup() {
   showDeath();
 }
 
-const remove = (element) => {
+const deleteStatistics = (element) => {
   while (element.firstChild) {
     element.removeChild(element.firstChild);
   }
@@ -482,8 +482,8 @@ const closeModal = () => {
   modal.classList.add('hide');
   modal.style.display = 'none';
   document.body.style.overflow = '';
-  remove(deathBlock);
-  remove(itemsBlock);
+  deleteStatistics(deathBlock);
+  deleteStatistics(itemsBlock);
 }
 
 modal.addEventListener('click', (e) => {
