@@ -1,3 +1,34 @@
+let db = null
+
+let i = 0;
+function addStep(option) {
+  i++;
+  const step = {
+    stepText: `${option.text}`,
+    step: i,
+  }
+
+  const tx = db.transaction("steps", "readwrite");
+  const pSteps = tx.objectStore("steps");
+  pSteps.add(step);
+}
+
+const request = indexedDB.open('Quest Data steps', 1);
+
+//on upgrade needed
+request.onupgradeneeded = e => {
+  db = e.target.result;
+  const pSteps = db.createObjectStore("steps", { keyPath: "step" });
+}
+//on success 
+request.onsuccess = e => {
+  db = e.target.result;
+}
+//on error
+request.onerror = e => {
+  alert(`error: ${e.target.error} was found `);
+}
+
 const textElement = document.getElementById('text'),
   optionButtonsElement = document.getElementById('option-buttons'),
   stats = document.querySelector('.stats'),
@@ -31,6 +62,7 @@ function showTextNode(textNodeIndex) {
       button.classList.add('btn');
       button.addEventListener('click', () => selectOption(option));
       optionButtonsElement.appendChild(button);
+      button.addEventListener('click', () => addStep(option));
     }
     if (option.nextText === -1) {
       stats.style.display = 'flex';
@@ -364,7 +396,7 @@ const textNodes = [
       {
         text: 'Під плащем жбурляю в Путіна всі предмети, які потрапляють під руку. Путін божеволіє і вмирає від сердцевого нападу. В новинах розкажуть, що помер на роботі :)',
         requiredState: (currentState) => currentState.items.invisibilityCloak,
-        setState: { death: 'Ви інкременували смерть Путіна.' },
+        setState: { death: 'Ви інкримінували смерть Путіна.' },
         nextText: 9
       },
       {
@@ -376,19 +408,19 @@ const textNodes = [
       {
         text: 'Швидкими рухамі за кілька секунд підбігаю до Путіна, вирубаю його і встановлюю сцену самогубства.',
         requiredState: (currentState) => currentState.items.ninja,
-        setState: { death: 'Ви інкременували смерть Путіна.' },
+        setState: { death: 'Ви інкримінували смерть Путіна.' },
         nextText: 9
       },
       {
         text: "Вбиваю Путіна і виходячи з кабінету спеціально проходжу повз камеру. Ранкові новини розкажуть як Шойгу вбив Путіна.",
         requiredState: (currentState) => currentState.items.herbsАndPotionFlask,
-        setState: { death: 'Ви інкременували смерть Путіна.' },
+        setState: { death: 'Ви інкримінували смерть Путіна.' },
         nextText: 9
       },
       {
         text: "Під час розмиви з Путіним непомітно підсипаю йому отруту, яку він випиває. Путін падає на підлогу, я гукаю на допомогу і під час суматохи спокійно виходжу з кімнати.",
         requiredState: (currentState) => currentState.items.herbsАndPotionFlask,
-        setState: { death: 'Ви інкременували смерть Путіна.' },
+        setState: { death: 'Ви інкримінували смерть Путіна.' },
         nextText: 9
       },
     ]
