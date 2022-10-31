@@ -438,6 +438,8 @@ const textNodes = [
 ]
 
 // Модальне вікно
+const deathBlock = document.querySelector('.death'),
+  itemsBlock = document.querySelector('.items');
 // показати предмети в статистиці
 const showItems = () => {
   const items = Object.values(state.items);
@@ -446,7 +448,7 @@ const showItems = () => {
     element.innerHTML =
       `${value}`
       ;
-    document.querySelector('.items').append(element);
+    itemsBlock.append(element);
   });
 }
 
@@ -454,7 +456,7 @@ const showItems = () => {
 const showDeath = () => {
   const element = document.createElement('p');
   element.innerHTML = state.death;
-  document.querySelector('.death').append(element);
+  deathBlock.append(element);
 }
 
 // функція створення модального вікна зі статистикою
@@ -463,6 +465,11 @@ function createPopup() {
   showDeath();
 }
 
+const remove = (element) => {
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
+  }
+}
 stats.addEventListener('click', () => {
   createPopup();
   modal.style.display = 'flex';
@@ -475,6 +482,8 @@ const closeModal = () => {
   modal.classList.add('hide');
   modal.style.display = 'none';
   document.body.style.overflow = '';
+  remove(deathBlock);
+  remove(itemsBlock);
 }
 
 modal.addEventListener('click', (e) => {
